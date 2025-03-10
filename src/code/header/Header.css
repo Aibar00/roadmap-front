@@ -1,0 +1,21 @@
+.header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.header-container {
+    width: 92%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.web-icon {
+    font-family: 'League Spartan', sans-serif;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 20px;
+}
