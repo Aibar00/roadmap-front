@@ -70,6 +70,17 @@ function Advise({ theme = "light" }) {
   const upArrow = theme === "dark" ? upArrowWhite : upArrowBlack;
   const downArrow = theme === "dark" ? downArrowWhite : downArrowBlack;
 
+  const getUsername = (user_id) => {
+    const userMap = {
+      1: "meirambek",
+      2: "aibar_best",
+      3: "aibar1",
+      4: "nurdaulet",
+      999: "aibar1"
+    };
+    return userMap[user_id] || "Unknown";
+  };
+
   const formatNumber = (num) => {
     if (!num) return "";
     if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -184,7 +195,7 @@ function Advise({ theme = "light" }) {
         <div className='advise'>
           <div className='advise-info'>
             <div className='advise-type'>[{advise.type.toUpperCase()}]</div>
-            <div className='advise-author'>Advisor {advise.user_id}</div>
+            <div className='advise-author'>Advisor {getUsername(advise.user_id)}</div>
             <div className='advise-date'>{getTimeAgo(advise.date)}</div>
           </div>
           <div className='advise-text'>{advise.text}</div>
@@ -200,17 +211,19 @@ function Advise({ theme = "light" }) {
             <div className='write-reply-container'>
               <div className='profile-picture'></div>
               <div className='write-reply-submit'>
-                <select value={replyType} onChange={(e) => setReplyType(e.target.value)}>
-                  <option value="reply">Reply</option>
-                  <option value="advise">Advise</option>
-                  <option value="question">Question</option>
-                </select>
-                <input
-                  className='write-reply'
-                  placeholder='Write a response...'
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                />
+                <div className='input-row'>
+                  <select value={replyType} onChange={(e) => setReplyType(e.target.value)} className="post-type-select">
+                    <option value="reply">Reply</option>
+                    <option value="advise">Advise</option>
+                    <option value="question">Question</option>
+                  </select>
+                  <input
+                    className='write-reply'
+                    placeholder='Write a response...'
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                  />
+                </div>
                 <div className='submit-buttons'>
                   <div className='cancel' onClick={() => setWriteReply(false)}>Cancel</div>
                   <button
@@ -266,7 +279,7 @@ function Advise({ theme = "light" }) {
         <div className='response'>
           <div className='advise-info'>
             <div className='advise-type'>[{response.type.toUpperCase()}]</div>
-            <div className='advise-author'>Responder {response.user_id}</div>
+            <div className='advise-author'>Responder {getUsername(response.user_id)}</div>
             <div className='advise-date'>{getTimeAgo(response.date)}</div>
           </div>
           <div className='advise-text'>{response.text}</div>
@@ -282,17 +295,19 @@ function Advise({ theme = "light" }) {
             <div className='write-reply-container'>
               <div className='profile-picture'></div>
               <div className='write-reply-submit'>
-                <select value={replyType} onChange={(e) => setReplyType(e.target.value)}>
-                  <option value="reply">Reply</option>
-                  <option value="advise">Advise</option>
-                  <option value="question">Question</option>
-                </select>
-                <input
-                  className='write-reply'
-                  placeholder='Write a response...'
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                />
+                <div className='input-row'>
+                  <select value={replyType} onChange={(e) => setReplyType(e.target.value)} className="post-type-select">
+                    <option value="reply">Reply</option>
+                    <option value="advise">Advise</option>
+                    <option value="question">Question</option>
+                  </select>
+                  <input
+                    className='write-reply'
+                    placeholder='Write a response...'
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                  />
+                </div>
                 <div className='submit-buttons'>
                   <div className='cancel' onClick={() => setWriteReply(false)}>Cancel</div>
                   <button
@@ -345,16 +360,18 @@ function Advise({ theme = "light" }) {
       <div className='write-reply-container'>
         <div className='profile-picture'></div>
         <div className='write-reply-submit'>
-          <select value={postType} onChange={(e) => setPostType(e.target.value)}>
-            <option value="advise">Advise</option>
-            <option value="question">Question</option>
-          </select>
-          <input
-            className='write-reply'
-            placeholder='Share your advice or ask a question...'
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-          />
+          <div className='input-row'>
+            <select value={postType} onChange={(e) => setPostType(e.target.value)} className="post-type-select">
+              <option value="advise">Advise</option>
+              <option value="question">Question</option>
+            </select>
+            <input
+              className='write-reply'
+              placeholder='Share your advice or ask a question...'
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+            />
+          </div>
           <div className='submit-buttons'>
             <div className='cancel' onClick={() => setReplyText("")}>Cancel</div>
             <button
