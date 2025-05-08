@@ -15,6 +15,7 @@ import Tree from './Tree.jsx';
 function RoadmapPage() {
     const navigate = useNavigate();
     const [selectedTab, setSelectedTab] = useState("comments");
+    const [selectedNode, setSelectedNode] = useState(null);
 
     const [editMode, setEditMode] = useState(false);
     const [editRequest, setEditRequest] = useState(null);
@@ -32,17 +33,30 @@ function RoadmapPage() {
     };
 
     const handleSuggestionSubmit = (suggestion) => {
-        setSuggestions(prev => [...prev, suggestion]);
+        setSuggestions(prev => [...prev, { ...suggestion, votes: 0 }]);
         setEditRequest(null);
         setEditMode(false);
+    };
+
+    const handleVote = (index, type) => {
+        setSuggestions(prev => {
+            const newSuggestions = [...prev];
+            const suggestion = newSuggestions[index];
+            if (type === 'up') {
+                suggestion.votes = (suggestion.votes || 0) + 1;
+            } else if (type === 'down') {
+                suggestion.votes = (suggestion.votes || 0) - 1;
+            }
+            return newSuggestions;
+        });
     };
 
     const location = useLocation();
     const { topic, category_name = "Programming" } = location.state || {};
 
     const topicData = {
-        name: "Java",
-        description: "Master Java programming with our expertly curated roadmap. From core concepts to advanced frameworks, this guide will help you build robust applications and excel in your coding journey."
+        name: topic.name,
+        description: topic.description
     };
 
     class Step {
@@ -78,7 +92,7 @@ function RoadmapPage() {
 
     const [roadmapBE, setRoadmapBE] = useState();
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/roadmap/2")
+        fetch(`http://127.0.0.1:8000/roadmap_tree/${topic.topic_id}`)
             .then((response) => response.json())
             .then((roadmapBE) => {
                 console.log(roadmapBE);
@@ -87,71 +101,30 @@ function RoadmapPage() {
             .catch((error) => console.error("Error fetching data:", error));
     }, []);
 
-    const treeData = {
-        value: 'Java Basics',
-        children: [
-            { value: 'Syntax and Variables', children: [
-                { value: 'Control Structures', children: [
-                    {
-                        value: 'Core Concepts',
-                        children: [
-                            { value: 'Object-Oriented Programming', children: [
-                             
-                            ] },
-                            {value: 'Intermediate Skills',
-                                    children: [
-                                        { value: 'Exception Handling', children: [
-                                            {
-                                                value: 'Advanced Techniques',
-                                                children: [
-                                                    { value: 'Multithreading', children: [
-                                                        {
-                                                            value: 'Practical Applications',
-                                                            children: [
-                                                                { value: 'Spring Framework', children: [] },
-                                                            ],
-                                                        },
-                                                    ] },
-                                                ],
-                                            },
-                                        ] },
-                                    ],
-                                }
-                        ],
-                    },
-                ] },
-            ] },
-        ],
-    };
+    const treeData = roadmapBE;
 
-    const navigateToSubtopic = () => {
-        navigate('/subtopic');
+    const handleNodeSelect = (node) => {
+        if (selectedNode && selectedNode.id === node.id) {
+          setSelectedNode(null);
+        } else {
+          setSelectedNode(node);
+        }
+      };
+
+    const handleClosePanel = () => {
+        setSelectedNode(null);
     };
 
     return (
         <div className={`roadmap-body ${currentCategory}`}>
             <Header mode="programming"/>
-            <img src={programmerImage} className='background-image'></img>
+            <img src={programmerImage} className='background-image' alt="Background" />
             <div className='subtopic-container'>
                 <div className='subtopic-text'>
                     <div className='subtopic-name'>{topicData.name}</div>
                     <div className='subtopic-description'>{topicData.description}</div>
                     <div className='subtopic-feedback'></div>
                 </div>
-            </div>
-            <div className='subtopic-info'>
-                <h3>Welcome to Java!</h3>
-                <p>
-                    If you're new to programming, Java is a fantastic place to start! Java is a versatile, beginner-friendly language used everywhere—from mobile apps like those on Android to large-scale enterprise systems. Its "write once, run anywhere" philosophy means your code can work on any device with a Java Virtual Machine (JVM). Don’t worry if you’re just beginning; this roadmap will guide you step-by-step to becoming a confident Java developer!
-                </p>
-                <h3>A Brief History of Java</h3>
-                <p>
-                    Java was created by James Gosling and his team at Sun Microsystems in 1995. Originally designed for interactive television, it became a general-purpose language due to its portability and robustness. Sun released the first public version, Java 1.0, in 1996, and it quickly gained popularity. In 2010, Oracle acquired Sun, and today, Java remains one of the most widely used languages, powering billions of devices worldwide.
-                </p>
-                <h3>Why Learn Java?</h3>
-                <p>
-                    Java is known for its platform independence, strong community support, and extensive libraries. It’s object-oriented, meaning you’ll learn to structure code in a way that’s reusable and maintainable. Java is also in high demand—used in web development, Android apps, backend systems, and more. Whether you’re aiming for a career in tech or just want to build cool projects, Java is a skill that opens doors!
-                </p>
             </div>
             <div className='container-in-roadmap'>
                 <div className="best-container">
@@ -238,6 +211,7 @@ function RoadmapPage() {
                             data={treeData} 
                             editMode={editMode} 
                             onEditRequest={handleEditActionFromTree} 
+                            onNodeSelect={handleNodeSelect}
                         />
                     </div>
                 </div>
@@ -248,6 +222,8 @@ function RoadmapPage() {
                                 editRequest={editRequest} 
                                 onSubmitSuggestion={handleSuggestionSubmit}
                                 onStartEdit={handleToggleEditMode}
+                                suggestions={suggestions}
+                                handleVote={handleVote}
                                 isActive={selectedTab === 'recommendations'}
                             />
                         </Panel>
@@ -259,6 +235,34 @@ function RoadmapPage() {
                         </Panel>
                     </div>
                 </div>
+            </div>
+            <div className={`node-panel ${selectedNode ? 'open' : ''}`}>
+                {selectedNode && (
+                    <div className="panel-content">
+                        <button onClick={handleClosePanel} className="close-button">Close</button>
+                        <h2>{selectedNode.value}</h2>
+                        {selectedNode.materials.map((material, index) => (
+                            <div key={index}>
+                                <h3>Material {index + 1}</h3>
+                                <p>{material.description}</p>
+                                {material.books && material.books.length > 0 && (
+                                    <ul>
+                                        {material.books.map((book, idx) => (
+                                            <li key={idx}><a href={book} target="_blank" rel="noopener noreferrer">Book {idx + 1}</a></li>
+                                        ))}
+                                    </ul>
+                                )}
+                                {material.videos && material.videos.length > 0 && (
+                                    <ul>
+                                        {material.videos.map((video, idx) => (
+                                            <li key={idx}><a href={video} target="_blank" rel="noopener noreferrer">Video {idx + 1}</a></li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
             <Footer mode="programming"/>
         </div>

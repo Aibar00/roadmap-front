@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import ScrollToTop from './code/ScrollToTop.jsx';
 import CategoryProgramming from './code/categories/CategoryProgramming.jsx';
+// import { Desktop } from './code/mainPage/Desktop.jsx';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
               <Route path="/aboutus" element={<AboutUsPage />} />
               <Route path="/subtopic" element={<Material />} />
               <Route path="/category/programming" element={<CategoryProgramming />} />
+              {/* <Route path="/desktop" element={<Desktop />} /> */}
           </Routes>
       </Router>
       <ToastContainer />

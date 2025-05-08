@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './MainPage.css';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
+import FeaturesSection from "./FeaturesSection";
 import mainPageImage from '../../assets/main-page-image.png';
 import footerImage1 from '../../assets/footer-image1.png';
 import likeIconWhite from '../../assets/like-white.png';
@@ -49,6 +50,7 @@ function MainPage() {
                 if (!response.ok) throw new Error('Failed to fetch categories');
                 const data = await response.json();
                 setArrayOfCategory(data);
+                console.log(data)
             } catch (error) {
                 setError(error.message);
                 console.error("Error fetching data:", error);
@@ -94,22 +96,28 @@ function MainPage() {
                     </div>
                 </div>
             </section>
-            <section className="features-section">
-                <h2>Why Choose Our Platform?</h2>
-                <div className="features-grid">
-                    <div className="feature-card">
-                        <h3>Curated Roadmaps</h3>
-                        <p>Explore expertly crafted learning paths tailored to your interests.</p>
-                    </div>
-                    <div className="feature-card">
-                        <h3>Community Voting</h3>
-                        <p>Vote on roadmap updates to keep content relevant and engaging.</p>
-                    </div>
-                    <div className="feature-card">
-                        <h3>Interactive Learning</h3>
-                        <p>Engage with a supportive community through feedback and discussions.</p>
-                    </div>
+            <section className="features-tree-section">
+                <div className="features-tree-question">Why Choose Our Platform?</div>
+                <div style={{border: "2px solid #00d4b4", borderRadius: '15px', top: '8vw', width: '100%', height: '72vw', position: 'absolute'}}></div>
+                <div className="circle-wrapper">
+                    <div className="feature-tree-first-circle"></div>
+                    <div className="feature-tree-first-line"></div>
+                    <div className="feature-tree-first-circle" style={{top: "calc( 25.95vw)", left: "calc(36.95vw)", height: "10vw", width: "10vw"}}></div>
+                    <div className="feature-tree-second-line" style={{top: "calc( 25.95vw + 5vw)", left: "calc(36.95vw + 5vw)"}}></div>
+                    <div className="feature-tree-first-circle" style={{top: "calc( 55.84vw)", left: "calc(24.27vw)", height: "8vw", width: "8vw"}}></div>
                 </div>
+                <div className="curated-roadmaps">
+                    <div className="curated-roadmaps-name">Curated Roadmaps</div>
+                    <div className="curated-roadmaps-text">Explore expertly crafted learning paths tailored to your interests.</div>
+                </div>
+                <div className="community-voting">
+                    <div className="community-voting-name">Community Voting</div>
+                    <div className="community-voting-text">Vote on roadmap updates to keep content relevant and engaging.</div>
+                </div>
+                <div className="interactive-learning">
+                    <div className="interactive-learning-name">Interactive Learning</div>
+                    <div className="interactive-learning-text">Engage with a supportive community through feedback and discussions.</div>
+                </div>    
             </section>
             <section className="testimonials-section">
                 <h2>What Our Users Say</h2>

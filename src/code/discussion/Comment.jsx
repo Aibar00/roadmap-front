@@ -203,7 +203,7 @@ function Comment({ theme = "light" }) {
         <div className='profile-picture'></div>
         <div className='comment'>
           <div className='comment-info'>
-            <div className='comment-author'>User {comment.user_id}</div>
+            <div className='comment-author'>{comment.username}</div>
             <div className='comment-date'>{getTimeAgo(comment.date)}</div>
           </div>
           <div className='comment-text'>{comment.text}</div>

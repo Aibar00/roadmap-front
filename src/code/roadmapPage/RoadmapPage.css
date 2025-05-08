@@ -88,7 +88,7 @@
     font-family: 'League Spartan', sans-serif;
     color: rgb(255, 255, 255);
     background: linear-gradient(135deg, rgba(10, 15, 50, 0.9), rgba(19, 27, 92, 0.95));
-    border: 0.2vw solid rgb(0, 212, 180);
+    border: 0.2vw solid #00d4b4;
     border-radius: 1.5vw;
     box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.3), inset 0 0 1vw rgba(0, 212, 180, 0.1);
     position: relative;
@@ -170,13 +170,6 @@
     justify-content: space-between;
     position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.best-resource:hover,
-.best-contributor:hover,
-.best-advice:hover {
-    transform: translateY(-0.5vw);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .best-resource-upper-container,
@@ -846,4 +839,38 @@ svg {
     0% { transform: scale(1); opacity: 0.3; }
     50% { transform: scale(1.1); opacity: 0.1; }
     100% { transform: scale(1); opacity: 0.3; }
+}
+
+.node-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: rgb(19, 27, 92);
+    color: white;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.node-panel.open {
+    transform: translateX(0);
+}
+
+.panel-content {
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
 }

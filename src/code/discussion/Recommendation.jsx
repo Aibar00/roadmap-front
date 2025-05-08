@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import './UserSuggestions.css';
 
-const UserSuggestions = ({ editRequest, onSubmitSuggestion, onStartEdit }) => {
+const UserSuggestions = ({ editRequest, onSubmitSuggestion, onStartEdit, suggestions, handleVote }) => {
   const [modalData, setModalData] = useState(null);
   const [form, setForm] = useState({ name: '', description: '', comment: '' });
 
@@ -59,6 +59,29 @@ const UserSuggestions = ({ editRequest, onSubmitSuggestion, onStartEdit }) => {
       <button className="suggestion-btn" onClick={onStartEdit}>
         ✏️ Propose Edit
       </button>
+      <div className="suggestions-list">
+        {suggestions.map((suggestion, index) => (
+          <div key={index} className="suggestion-item">
+            <div className="suggestion-header">
+              {suggestion.action === 'add' && `Add new step under: ${suggestion.node.value}`}
+              {suggestion.action === 'change' && `Change step: ${suggestion.node.value}`}
+              {suggestion.action === 'remove' && `Remove step: ${suggestion.node.value}`}
+            </div>
+            {suggestion.action !== 'remove' && (
+              <>
+                <div className="suggestion-detail">Proposed Name: {suggestion.name}</div>
+                <div className="suggestion-detail">Proposed Description: {suggestion.description}</div>
+              </>
+            )}
+            {suggestion.comment && <div className="comment-suggestion">Comment: {suggestion.comment}</div>}
+            <div className="vote-buttons">
+              <button onClick={() => handleVote(index, 'up')}>👍</button>
+              <span>{suggestion.votes || 0}</span>
+              <button onClick={() => handleVote(index, 'down')}>👎</button>
+            </div>
+          </div>
+        ))}
+      </div>
       {modal}
     </div>
   );
@@ -84,8 +107,8 @@ const TreePreview = ({ parentNode, node, newNodeId, highlightOnly }) => {
             return {
             id: newNodeId,
             value: "New Step",
-            x: parentNode.x,       // ← stay on same row
-            y: parentNode.y + 1,   // ← move to right
+            x: parentNode.x,
+            y: parentNode.y + 1,
             children: [],
             };
         }
@@ -139,7 +162,6 @@ const TreePreview = ({ parentNode, node, newNodeId, highlightOnly }) => {
   
       return (
         <g key={n.id}>
-          {/* Circle */}
           <circle
             cx={x}
             cy={y}
@@ -148,8 +170,6 @@ const TreePreview = ({ parentNode, node, newNodeId, highlightOnly }) => {
             stroke="white"
             strokeWidth={3}
           />
-  
-          {/* Rect + Text */}
           <g>
             <clipPath id={clipId}>
               <rect
@@ -161,7 +181,6 @@ const TreePreview = ({ parentNode, node, newNodeId, highlightOnly }) => {
                 ry="6"
               />
             </clipPath>
-  
             <rect
               x={x - rectWidth / 2}
               y={y + radius + rectYGap}
@@ -173,7 +192,6 @@ const TreePreview = ({ parentNode, node, newNodeId, highlightOnly }) => {
               rx="3"
               ry="3"
             />
-  
             <text
               x={x}
               y={startY}
@@ -221,4 +239,3 @@ const TreePreview = ({ parentNode, node, newNodeId, highlightOnly }) => {
       </svg>
     );
   };
-  
